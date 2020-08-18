@@ -1,0 +1,144 @@
+version: 2.1
+executors:
+  node:
+    docker:
+      - image: 'circleci/node:12'
+    shell: /bin/bash
+    working_directory: ~/app
+    resource_class: small
+
+jobs:
+  api-install:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Node.js dependencies with Npm
+          command: |
+            cd ~/app/api-service
+            npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/app/api-service/node_modules
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - .
+  tic-tac-toe-install:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Node.js dependencies with Npm
+          command: |
+            cd ~/app/tic-tac-toe
+            npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/app/tic-tac-toe/node_modules
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - .
+
+  api-lint:
+    executor: node
+    working_directory: 
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Lint the source code
+          command: |
+            cd ~/app/api-service
+            npm run lint
+
+  api-tests:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Unit Tests
+          command: |
+            cd ~/app/api-service
+            npm run test:cov
+          no_output_timeout: 5m
+      - store_artifacts:
+          path: ~/app/api-service/coverage
+          destination: coverage
+
+  api-build-image:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Build Docker Image
+          command: |
+            echo "Building docker image"
+
+  tic-tac-toe-lint:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Lint Frontend
+          command: |
+            echo "Linting"
+
+  tic-tac-toe-tests:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Unit Tests
+          command: |
+            cd ~/app/tic-tac-toe
+            npm test || echo
+          no_output_timeout: 2m
+
+  tic-tac-toe-build-image:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Build Docker Image
+          command: |
+            echo "Building docker image...."
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - api-install
+      - tic-tac-toe-install
+      - api-lint:
+          requires:
+            - api-install
+      - api-tests:
+          requires:
+            - api-install
+      - tic-tac-toe-lint:
+          requires:
+            - tic-tac-toe-install
+      - tic-tac-toe-tests:
+          requires:
+            - tic-tac-toe-install
+      -  api-build-image:
+          requires:
+            - api-lint
+            - api-tests
+      -  tic-tac-toe-build-image:
+          requires:
+            - tic-tac-toe-lint
+            - tic-tac-toe-tests

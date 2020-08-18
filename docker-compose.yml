@@ -1,0 +1,63 @@
+version: '3.7'
+
+networks:
+  tic-tac:
+    external: true
+volumes:
+  mysql-db:
+    driver:
+      local
+
+services:
+  api-service:
+    image: node:12
+    volumes:
+      - './api-service:/app'
+    working_dir: /app
+    networks:
+      - tic-tac
+    links: 
+      - mysql
+    ports:
+      - 4000:8081
+    environment:
+      - APP_PORT=8081
+    command: "npm run start:dev"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  
+  mysql:
+    image: mysql:5.6
+    restart: always
+    networks:
+      - tic-tac
+    environment:
+      MYSQL_DATABASE: api_service
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_pass
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-db:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  tic-tac-toe:
+    image: node:12
+    volumes:
+      - './tic-tac-toe:/app'
+    working_dir: /app
+    networks:
+      - tic-tac
+    depends_on: 
+      - api-service
+    ports:
+      - 8080:8080
+    environment:
+      - NODE_ENVIRONMENT=dev
+      - CHOKIDAR_USEPOLLING=true
+    command: "npm run start"
+    stdin_open: true
+    
