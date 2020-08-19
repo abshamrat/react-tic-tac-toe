@@ -15,6 +15,13 @@ const ActionLog = ({ actionLog }) => {
       justify="flex-start"
       style={{ minHeight: '40vh', marginTop: 40 }}
     >
+      <Grid item xs={12} sm={12} md={12} style={{minWidth: 200, marginBottom: 10, textAlign: 'center'}}>
+        <div>
+          <Divider />
+          <Typography variant="body1">Action Logs</Typography>
+          <Divider />
+        </div>
+      </Grid>
       <Grid item xs={12} sm={12} md={12}>
         {actionLog && actionLog.map((log, key) => (
           <div key={key}>

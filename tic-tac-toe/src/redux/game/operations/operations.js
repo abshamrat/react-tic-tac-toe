@@ -3,7 +3,7 @@ import { newGame, gameover, switchPlayer, winner, movePlayer, actionLog, session
 import { isWinner, isDraw } from '../../../utils/game';
 
 
-const apiUrl = 'http://localhost:4000/v1/action-logs';
+const apiUrl = process.env.API_URL || 'http://localhost:4000/v1/action-logs';
 const playerSymbol = {1: 'x', 2: 'o'};
 
 /**

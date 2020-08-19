@@ -1,8 +1,20 @@
-import reducer from './reducers/reducers';
-import * as actions from './actions/actions';
-import * as operations from './operations/operations';
+import reducer from '../../redux/game/reducers/reducers';
+import * as actions from '../../redux/game/actions/actions';
+import * as operations from '../../redux/game/operations/operations';
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
 
 // TODO: consider breaking out into specific test files
+
+const server = setupServer(
+  rest.get('http://localhost:4000/v1/action-logs', (req, res, ctx) => {
+    return res(ctx.json({ logMessage: 'Player 1 (x) move row:1 col:2'}))
+  })
+)
+
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
 
 describe('Game Duck', () => {
   const emptyBoard = [
@@ -34,10 +46,12 @@ describe('Game Duck', () => {
       // we know that we want our game state to have 'board and 'gameover' fields
       // our initial state for the board is an empty nested array and a false boolean field
       const expectedState = {
+        actionLog: [{}],
         board: [[]],
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       // our action is an action that is not part of the game duck
@@ -54,18 +68,22 @@ describe('Game Duck', () => {
     it('should start a new game', () => {
       // the current state 
       const state = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: true,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       // the expected state after it has been reduced
       const expectedState = {
+        actionLog: [{}],
         board: emptyBoard.slice(),
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       // the action that will produce the new state
@@ -78,17 +96,21 @@ describe('Game Duck', () => {
 
     it('should end a game', () => {
       const state = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0,
       };
 
       const expectedState = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: true,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       const action = actions.gameover();
@@ -99,13 +121,16 @@ describe('Game Duck', () => {
 
     it('should update the board when a player makes a move', () => {
       const state = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       const expectedState = {
+        actionLog: [{}],
         board: [
           [0, 0, 0],
           [0, 0, 0],
@@ -113,7 +138,8 @@ describe('Game Duck', () => {
         ],
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       const player = 1;
@@ -128,17 +154,21 @@ describe('Game Duck', () => {
 
     it('should win a game', () => {
       const state = {
+        actionLog: [{}],
         board: player1WinBoard,
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       const expectedState = {
+        actionLog: [{}],
         board: player1WinBoard,
         gameover: true,
         player: 1,
-        winner: 1
+        winner: 1,
+        sessionId: 0,
       };
 
       const action = actions.winner(1);
@@ -149,17 +179,21 @@ describe('Game Duck', () => {
 
     it('should switch players', () => {
       const state = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: false,
         player: 1,
-        winner: -1
+        winner: -1,
+        sessionId: 0,
       };
 
       const expectedState = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: false,
         player: 2,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
       const action = actions.switchPlayer(2);
@@ -167,16 +201,15 @@ describe('Game Duck', () => {
 
       expect(result).toEqual(expectedState);
 
-      const state2 = Object.assign({}, expectedState);
-
       const expectedState2 = {
+        actionLog: [{}],
         board: emptyBoard,
         gameover: false,
         player: 2,
-        winner: -1
+        winner: -1,
+        sessionId: 0
       };
 
-      const action2 = actions.switchPlayer(1);
       const result2 = reducer(state, action);
 
       expect(result2).toEqual(expectedState2);

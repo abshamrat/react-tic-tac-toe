@@ -89,7 +89,7 @@ class Game extends Component {
           style={{ minHeight: '38vh', marginTop: 40 }}
         >
           <Grid item xs={12} sm={12} md={12} style={{marginBottom: 10}}>
-            <PlayerInfo player={player} gameover={gameover} />
+            <PlayerInfo player={player} gameover={gameover} winner={winner} />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <Board board={board} onMove={this.handleBoardOnMove} />

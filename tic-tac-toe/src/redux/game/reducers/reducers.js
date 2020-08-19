@@ -63,7 +63,7 @@ const playerReducer = (state = 1, action) => {
   }
 };
 
-const actionLogReducer = (state = [], action) => {
+const actionLogReducer = (state = [{}], action) => {
   switch (action.type) {
     case types.ACTION_LOG:
       return action.payload;
