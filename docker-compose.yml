@@ -54,7 +54,7 @@ services:
     depends_on: 
       - api-service
     ports:
-      - 8080:8080
+      - 3000:3000
     environment:
       - NODE_ENVIRONMENT=dev
       - CHOKIDAR_USEPOLLING=true

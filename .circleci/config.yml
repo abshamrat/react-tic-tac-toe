@@ -72,7 +72,7 @@ jobs:
           no_output_timeout: 5m
       - store_artifacts:
           path: ~/app/api-service/coverage
-          destination: coverage
+          destination: api-coverage
 
   api-build-image:
     executor: node
@@ -103,8 +103,11 @@ jobs:
           name: Unit Tests
           command: |
             cd ~/app/tic-tac-toe
-            npm test || echo
+            npm test
           no_output_timeout: 2m
+      - store_artifacts:
+          path: ~/app/tic-tac-toe/coverage
+          destination: tic-tac-toe-coverage
 
   tic-tac-toe-build-image:
     executor: node
