@@ -20,6 +20,7 @@ const Board = ({ classes, board, onMove }) => {
 
               return (
                 <Grid
+                  data-testid={`${rIdx}-${cIdx}`}
                   key={cIdx}
                   item
                   className={classnames(classes.square, border, marked)}

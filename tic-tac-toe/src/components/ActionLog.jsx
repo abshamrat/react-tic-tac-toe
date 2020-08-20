@@ -22,7 +22,7 @@ const ActionLog = ({ actionLog }) => {
           <Divider />
         </div>
       </Grid>
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid data-testid="action-log-list" item xs={12} sm={12} md={12}>
         {actionLog && actionLog.map((log, key) => (
           <div key={key}>
             <Typography variant="caption">{log.logMessage}</Typography>

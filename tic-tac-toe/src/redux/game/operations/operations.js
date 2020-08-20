@@ -1,10 +1,21 @@
 // import 'isomorphic-fetch';
 import { newGame, gameover, switchPlayer, winner, movePlayer, actionLog, sessionId } from '../actions/actions';
 import { isWinner, isDraw } from '../../../utils/game';
+import { apiService } from '../../../utils/getServiceUrl';
 
 
-const apiUrl = process.env.API_URL || 'http://localhost:4000/v1/action-logs';
 const playerSymbol = {1: 'x', 2: 'o'};
+
+const getFetchParams = (method, body) => ({
+  method,
+  mode: 'cors',
+  headers: {
+    'Content-Type': 'application/json',
+    //  We can do JWT
+    'API-Key': 'secret',
+  },
+  body
+})
 
 /**
  * Checks for a winner, if there is one, we dispatch two actions, one for winning the 
@@ -59,21 +70,18 @@ const playTurn = (player, row, col, uuid) => (dispatch) => {
   dispatch(switchPlayer(nextPlayer));
 
   // We might want to handle error case for sending the action
-  return fetch(apiUrl,
-    {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'API-Key': 'secret',
-      },
-      body: JSON.stringify(
-        {
-          uuid,
-          logMessage: `Player ${player} (${playerSymbol[player]}) move row: ${row}, col: ${col}`
-        }
-      )
-    })
+  return fetch(
+    apiService.logEndpoint, 
+    getFetchParams(
+      'POST', 
+      JSON.stringify(
+          {
+            uuid,
+            // We can store the action part by part rather than only a message.
+            logMessage: `Player ${player} (${playerSymbol[player]}) move row: ${row}, col: ${col}`
+          }
+        )
+    ))
     .then((res) => {
       if (res.status >= 400) {
         throw new Error("Bad response from server");
@@ -91,14 +99,7 @@ const playTurn = (player, row, col, uuid) => (dispatch) => {
  */
 const fetchActionLog = (uuid) => (dispatch) => {
 
-  return fetch(`${apiUrl}/${uuid}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'API-Key': 'secret',
-      },
-    })
+  return fetch(`${apiService.logEndpoint}/${uuid}`, getFetchParams('GET', undefined))
     .then(res => {
       if (res.status >= 400) {
         throw new Error("Bad response from server");

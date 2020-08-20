@@ -17,6 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "wait-on $API_SERVICE_HEALTH && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --watchAll=false --coverage --coverageReporters='html' --forceExit",
     "eject": "react-scripts eject",
@@ -26,8 +27,8 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "msw": "^0.20.5",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "wait-on": "^5.2.0"
   },
   "eslintConfig": {
     "extends": "react-app"

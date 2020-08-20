@@ -8,12 +8,10 @@ import App from './views/App.jsx';
 const { store, persistor } = configureStore({});
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={"loading..."} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <PersistGate loading={"loading..."} persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>,
   document.getElementById('app')
 );

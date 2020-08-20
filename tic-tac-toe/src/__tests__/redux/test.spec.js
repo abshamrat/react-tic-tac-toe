@@ -1,22 +1,9 @@
 import reducer from '../../redux/game/reducers/reducers';
 import * as actions from '../../redux/game/actions/actions';
 import * as operations from '../../redux/game/operations/operations';
-import { rest } from 'msw'
-import { setupServer } from 'msw/node'
 
-// TODO: consider breaking out into specific test files
 
-const server = setupServer(
-  rest.get('http://localhost:4000/v1/action-logs', (req, res, ctx) => {
-    return res(ctx.json({ logMessage: 'Player 1 (x) move row:1 col:2'}))
-  })
-)
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
-describe('Game Duck', () => {
+describe('Tic Tac Toe', () => {
   const emptyBoard = [
     [0, 0, 0],
     [0, 0, 0],
@@ -35,16 +22,8 @@ describe('Game Duck', () => {
     [2, 2, 0]
   ];
 
-  const player2WinBoard = [
-    [2, 2, 2],
-    [1, 1, 0],
-    [1, 1, 0]
-  ];
-
   describe('Reducers', () => {
     it('should have an initial state', () => {
-      // we know that we want our game state to have 'board and 'gameover' fields
-      // our initial state for the board is an empty nested array and a false boolean field
       const expectedState = {
         actionLog: [{}],
         board: [[]],
@@ -54,7 +33,6 @@ describe('Game Duck', () => {
         sessionId: 0
       };
 
-      // our action is an action that is not part of the game duck
       // we make one up, such as the one below, INIT, empty object or something not in the 
       // game duck as an action
       const action = { type: 'NOT_A_GAME_TYPE' };
