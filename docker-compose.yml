@@ -23,12 +23,7 @@ services:
     environment:
       - APP_PORT=8081
     command: "npm run start:dev"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-  
+
   mysql:
     image: mysql:5.6
     restart: always
@@ -51,13 +46,15 @@ services:
     working_dir: /app
     networks:
       - tic-tac
+    links:
+      - api-service
     depends_on: 
       - api-service
     ports:
       - 3000:3000
     environment:
-      - NODE_ENVIRONMENT=dev
+      - API_SERVICE_HEALTH=http://api-service:8081/v1/healths
       - CHOKIDAR_USEPOLLING=true
-    command: "npm run start"
+    command: "npm run start:dev"
     stdin_open: true
     
