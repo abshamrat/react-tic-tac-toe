@@ -11,6 +11,7 @@ export class ActionLog {
   @Column()
   logMessage: string;
 
-  @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Timestamp;
+  // We should keep timestamp for the action log
+  // @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+  // createdAt: Timestamp;
 }

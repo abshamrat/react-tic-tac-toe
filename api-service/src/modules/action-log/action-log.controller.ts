@@ -19,7 +19,7 @@ export class ActionLogController {
   }
 
   @Post()
-  create(@Body() actionLog: ActionLog): Promise<ActionLog> {
+  async create(@Body() actionLog: ActionLog): Promise<ActionLog> {
     return this.actionLogService.create(actionLog);
   }
 }
