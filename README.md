@@ -21,6 +21,10 @@ Note: keep little patience, for the first time run `make` does all the dependenc
 - Api-server (backend): http://localhost:4000/
 - Tic-tac-toe (frontend): http://localhost:3000/
 
+
+<img src="./.docs/assets/tic-tac-toe.gif" />
+
+
 ## Testing
 WE've mocked all the api/db dependent stuff so you can run tests without running the services and they can be tested independently.
 
