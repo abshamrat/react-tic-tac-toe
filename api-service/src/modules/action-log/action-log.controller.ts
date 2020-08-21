@@ -13,7 +13,7 @@ export class ActionLogController {
   }
 
   @Get('/:uuid')
-  async findByUUID(@Param() param): Promise<ActionLog[]> {
+  async findByUUID(@Param() param: {uuid: string}): Promise<ActionLog[]> {
     const logList = await this.actionLogService.findByUUID(param.uuid);
     return logList;
   }

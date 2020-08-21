@@ -14,11 +14,13 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n $(git rev-parse --abbrev-ref HEAD)",
+    "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch --forceExit",
+    "test:cov": "jest --coverage --coverageReporters='html' --forceExit",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json --forceExit"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",

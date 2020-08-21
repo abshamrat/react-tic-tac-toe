@@ -68,6 +68,7 @@ jobs:
           name: Unit Tests
           command: |
             cd ~/app/api-service
+            npm run test
             npm run test:cov
           no_output_timeout: 5m
       - store_artifacts:
