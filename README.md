@@ -1,4 +1,4 @@
-## Tic Tac Toe using react and nestjs backend
+## Tic Tac Toe Using ReactJs and NestJs
 [![CircleCI](https://circleci.com/gh/shamrat17/react-tic-tac-toe.svg?style=svg)](https://circleci.com/gh/shamrat17/react-tic-tac-toe) [![codecov](https://codecov.io/gh/shamrat17/react-tic-tac-toe/branch/master/graph/badge.svg)](https://codecov.io/gh/shamrat17/react-tic-tac-toe)
 
 This is a simple game implementation with ReactJs and NestJs api backend.
