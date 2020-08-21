@@ -24,21 +24,6 @@ services:
       - APP_PORT=8081
     command: "npm run start:dev"
 
-  mysql:
-    image: mysql:5.6
-    restart: always
-    networks:
-      - tic-tac
-    environment:
-      MYSQL_DATABASE: api_service
-      MYSQL_USER: api_user
-      MYSQL_PASSWORD: api_pass
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - mysql-db:/var/lib/mysql
-    ports:
-      - 3306:3306
-
   tic-tac-toe:
     image: node:12
     volumes:
@@ -57,4 +42,18 @@ services:
       - CHOKIDAR_USEPOLLING=true
     command: "npm run start:dev"
     stdin_open: true
-    
+      
+  mysql:
+    image: mysql:5.6
+    restart: always
+    networks:
+      - tic-tac
+    environment:
+      MYSQL_DATABASE: api_service
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_pass
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-db:/var/lib/mysql
+    ports:
+      - 3306:3306
